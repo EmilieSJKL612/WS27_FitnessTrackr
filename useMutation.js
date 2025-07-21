@@ -24,7 +24,18 @@ export default function useMutation(method, resource, tagsToInvalidate) {
       invalidateTags(tagsToInvalidate);
     } catch (e) {
       console.error(e);
-      setError(e.message);
+      //setError(e.message);
+      
+      //Em: API documentation from FS GH instruction page
+      if (e.message.includes('401')) {
+        setError('You are not authorized to perform this action');
+      } else if (e.message.includes('403')) {
+        setError('You do not have permission to delete this activity');
+      } else {
+        setError(e.message);
+      }
+      throw e;
+
     } finally {
       setLoading(false);
     }
